@@ -49,19 +49,19 @@ export function SubmitExpense() {
     const form = document.getElementById("expense-form") as HTMLFormElement
     if (form && result) {
       if (result.amount) {
-        ;(form.elements.namedItem("amount") as HTMLInputElement).value = result.amount.toString()
+        ; (form.elements.namedItem("amount") as HTMLInputElement).value = result.amount.toString()
       }
       if (result.currency) {
-        ;(form.elements.namedItem("currency") as HTMLSelectElement).value = result.currency
+        ; (form.elements.namedItem("currency") as HTMLSelectElement).value = result.currency
       }
       if (result.category) {
-        ;(form.elements.namedItem("category") as HTMLSelectElement).value = result.category
+        ; (form.elements.namedItem("category") as HTMLSelectElement).value = result.category
       }
       if (result.date) {
-        ;(form.elements.namedItem("date") as HTMLInputElement).value = result.date
+        ; (form.elements.namedItem("date") as HTMLInputElement).value = result.date
       }
       if (result.description) {
-        ;(form.elements.namedItem("description") as HTMLTextAreaElement).value = result.description
+        ; (form.elements.namedItem("description") as HTMLTextAreaElement).value = result.description
       }
     }
   }
@@ -167,13 +167,13 @@ export function SubmitExpense() {
       currentApproverId: firstApproverId,
       approvalHistory: firstApproverId
         ? [
-            {
-              approverId: firstApproverId,
-              approverName,
-              action: "pending",
-              timestamp: new Date().toISOString(),
-            },
-          ]
+          {
+            approverId: firstApproverId,
+            approverName,
+            action: "pending",
+            timestamp: new Date().toISOString(),
+          },
+        ]
         : [],
       createdAt: new Date().toISOString(),
     }
