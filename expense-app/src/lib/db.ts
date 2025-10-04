@@ -1,4 +1,4 @@
-import type { User, Company, Expense, ApprovalRule } from "./types"
+import type { User, Company, Expense, ApprovalRule } from "./types";
 
 const STORAGE_KEYS = {
   USERS: "expense_app_users",
@@ -6,14 +6,14 @@ const STORAGE_KEYS = {
   EXPENSES: "expense_app_expenses",
   APPROVAL_RULES: "expense_app_approval_rules",
   CURRENT_USER: "expense_app_current_user",
-}
+};
 
 // Initialize with dummy data
 export function initializeDatabase() {
-  if (typeof window === "undefined") return
+  if (typeof window === "undefined") return;
 
   // Check if already initialized
-  if (localStorage.getItem(STORAGE_KEYS.USERS)) return
+  if (localStorage.getItem(STORAGE_KEYS.USERS)) return;
 
   // Create dummy company
   const dummyCompany: Company = {
@@ -22,7 +22,7 @@ export function initializeDatabase() {
     currency: "USD",
     countryCode: "US",
     createdAt: new Date().toISOString(),
-  }
+  };
 
   // Create dummy users
   const dummyUsers: User[] = [
@@ -64,7 +64,7 @@ export function initializeDatabase() {
       managerId: "user-2",
       createdAt: new Date().toISOString(),
     },
-  ]
+  ];
 
   // Create dummy expenses
   const dummyExpenses: Expense[] = [
@@ -107,7 +107,9 @@ export function initializeDatabase() {
           approverName: "Sarah Manager",
           action: "approved",
           comment: "Approved for business travel",
-          timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+          timestamp: new Date(
+            Date.now() - 4 * 24 * 60 * 60 * 1000
+          ).toISOString(),
         },
       ],
       createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
@@ -151,12 +153,14 @@ export function initializeDatabase() {
           approverName: "Sarah Manager",
           action: "rejected",
           comment: "Please use company supplies",
-          timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+          timestamp: new Date(
+            Date.now() - 6 * 24 * 60 * 60 * 1000
+          ).toISOString(),
         },
       ],
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     },
-  ]
+  ];
 
   // Create dummy approval rule
   const dummyApprovalRules: ApprovalRule[] = [
@@ -174,179 +178,193 @@ export function initializeDatabase() {
       levels: [],
       createdAt: new Date().toISOString(),
     },
-  ]
+  ];
 
-  localStorage.setItem(STORAGE_KEYS.COMPANIES, JSON.stringify([dummyCompany]))
-  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(dummyUsers))
-  localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(dummyExpenses))
-  localStorage.setItem(STORAGE_KEYS.APPROVAL_RULES, JSON.stringify(dummyApprovalRules))
+  localStorage.setItem(STORAGE_KEYS.COMPANIES, JSON.stringify([dummyCompany]));
+  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(dummyUsers));
+  localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(dummyExpenses));
+  localStorage.setItem(
+    STORAGE_KEYS.APPROVAL_RULES,
+    JSON.stringify(dummyApprovalRules)
+  );
 }
 
 // Database operations
 export const db = {
   users: {
     getAll: (): User[] => {
-      if (typeof window === "undefined") return []
-      const data = localStorage.getItem(STORAGE_KEYS.USERS)
-      return data ? JSON.parse(data) : []
+      if (typeof window === "undefined") return [];
+      const data = localStorage.getItem(STORAGE_KEYS.USERS);
+      return data ? JSON.parse(data) : [];
     },
     getById: (id: string): User | null => {
-      const users = db.users.getAll()
-      return users.find((u) => u.id === id) || null
+      const users = db.users.getAll();
+      return users.find((u) => u.id === id) || null;
     },
     getByEmail: (email: string): User | null => {
-      const users = db.users.getAll()
-      return users.find((u) => u.email === email) || null
+      const users = db.users.getAll();
+      return users.find((u) => u.email === email) || null;
     },
     getByCompany: (companyId: string): User[] => {
-      const users = db.users.getAll()
-      return users.filter((u) => u.companyId === companyId)
+      const users = db.users.getAll();
+      return users.filter((u) => u.companyId === companyId);
     },
     getByManager: (managerId: string): User[] => {
-      const users = db.users.getAll()
-      return users.filter((u) => u.managerId === managerId)
+      const users = db.users.getAll();
+      return users.filter((u) => u.managerId === managerId);
     },
     create: (user: User): void => {
-      const users = db.users.getAll()
-      users.push(user)
-      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users))
+      const users = db.users.getAll();
+      users.push(user);
+      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
     },
     update: (id: string, updates: Partial<User>): void => {
-      const users = db.users.getAll()
-      const index = users.findIndex((u) => u.id === id)
+      const users = db.users.getAll();
+      const index = users.findIndex((u) => u.id === id);
       if (index !== -1) {
-        users[index] = { ...users[index], ...updates }
-        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users))
+        users[index] = { ...users[index], ...updates };
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
       }
     },
     delete: (id: string): void => {
-      const users = db.users.getAll()
-      const filtered = users.filter((u) => u.id !== id)
-      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(filtered))
+      const users = db.users.getAll();
+      const filtered = users.filter((u) => u.id !== id);
+      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(filtered));
     },
   },
   companies: {
     getAll: (): Company[] => {
-      if (typeof window === "undefined") return []
-      const data = localStorage.getItem(STORAGE_KEYS.COMPANIES)
-      return data ? JSON.parse(data) : []
+      if (typeof window === "undefined") return [];
+      const data = localStorage.getItem(STORAGE_KEYS.COMPANIES);
+      return data ? JSON.parse(data) : [];
     },
     getById: (id: string): Company | null => {
-      const companies = db.companies.getAll()
-      return companies.find((c) => c.id === id) || null
+      const companies = db.companies.getAll();
+      return companies.find((c) => c.id === id) || null;
     },
     create: (company: Company): void => {
-      const companies = db.companies.getAll()
-      companies.push(company)
-      localStorage.setItem(STORAGE_KEYS.COMPANIES, JSON.stringify(companies))
+      const companies = db.companies.getAll();
+      companies.push(company);
+      localStorage.setItem(STORAGE_KEYS.COMPANIES, JSON.stringify(companies));
     },
     update: (id: string, updates: Partial<Company>): void => {
-      const companies = db.companies.getAll()
-      const index = companies.findIndex((c) => c.id === id)
+      const companies = db.companies.getAll();
+      const index = companies.findIndex((c) => c.id === id);
       if (index !== -1) {
-        companies[index] = { ...companies[index], ...updates }
-        localStorage.setItem(STORAGE_KEYS.COMPANIES, JSON.stringify(companies))
+        companies[index] = { ...companies[index], ...updates };
+        localStorage.setItem(STORAGE_KEYS.COMPANIES, JSON.stringify(companies));
       }
     },
   },
   expenses: {
     getAll: (): Expense[] => {
-      if (typeof window === "undefined") return []
-      const data = localStorage.getItem(STORAGE_KEYS.EXPENSES)
-      return data ? JSON.parse(data) : []
+      if (typeof window === "undefined") return [];
+      const data = localStorage.getItem(STORAGE_KEYS.EXPENSES);
+      return data ? JSON.parse(data) : [];
     },
     getById: (id: string): Expense | null => {
-      const expenses = db.expenses.getAll()
-      return expenses.find((e) => e.id === id) || null
+      const expenses = db.expenses.getAll();
+      return expenses.find((e) => e.id === id) || null;
     },
     getByEmployee: (employeeId: string): Expense[] => {
-      const expenses = db.expenses.getAll()
-      return expenses.filter((e) => e.employeeId === employeeId)
+      const expenses = db.expenses.getAll();
+      return expenses.filter((e) => e.employeeId === employeeId);
     },
     getByApprover: (approverId: string): Expense[] => {
-      const expenses = db.expenses.getAll()
-      return expenses.filter((e) => e.currentApproverId === approverId && e.status === "pending")
+      const expenses = db.expenses.getAll();
+      return expenses.filter(
+        (e) => e.currentApproverId === approverId && e.status === "pending"
+      );
     },
     getPendingForApprover: (approverId: string): Expense[] => {
-      return db.expenses.getByApprover(approverId)
+      return db.expenses.getByApprover(approverId);
     },
     getByCompany: (companyId: string): Expense[] => {
-      const expenses = db.expenses.getAll()
-      const users = db.users.getByCompany(companyId)
-      const userIds = users.map((u) => u.id)
-      return expenses.filter((e) => userIds.includes(e.employeeId))
+      const expenses = db.expenses.getAll();
+      const users = db.users.getByCompany(companyId);
+      const userIds = users.map((u) => u.id);
+      return expenses.filter((e) => userIds.includes(e.employeeId));
     },
     create: (expense: Expense): void => {
-      const expenses = db.expenses.getAll()
-      expenses.push(expense)
-      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses))
+      const expenses = db.expenses.getAll();
+      expenses.push(expense);
+      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses));
     },
-    update: (idOrExpense: string | Expense, updates?: Partial<Expense>): void => {
-      const expenses = db.expenses.getAll()
+    update: (
+      idOrExpense: string | Expense,
+      updates?: Partial<Expense>
+    ): void => {
+      const expenses = db.expenses.getAll();
 
       if (typeof idOrExpense === "string") {
         // Old signature: update(id, updates)
-        const index = expenses.findIndex((e) => e.id === idOrExpense)
+        const index = expenses.findIndex((e) => e.id === idOrExpense);
         if (index !== -1 && updates) {
-          expenses[index] = { ...expenses[index], ...updates }
-          localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses))
+          expenses[index] = { ...expenses[index], ...updates };
+          localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses));
         }
       } else {
         // New signature: update(expense)
-        const index = expenses.findIndex((e) => e.id === idOrExpense.id)
+        const index = expenses.findIndex((e) => e.id === idOrExpense.id);
         if (index !== -1) {
-          expenses[index] = idOrExpense
-          localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses))
+          expenses[index] = idOrExpense;
+          localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses));
         }
       }
     },
     delete: (id: string): void => {
-      const expenses = db.expenses.getAll()
-      const filtered = expenses.filter((e) => e.id !== id)
-      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(filtered))
+      const expenses = db.expenses.getAll();
+      const filtered = expenses.filter((e) => e.id !== id);
+      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(filtered));
     },
   },
   approvalRules: {
     getAll: (): ApprovalRule[] => {
-      if (typeof window === "undefined") return []
-      const data = localStorage.getItem(STORAGE_KEYS.APPROVAL_RULES)
-      return data ? JSON.parse(data) : []
+      if (typeof window === "undefined") return [];
+      const data = localStorage.getItem(STORAGE_KEYS.APPROVAL_RULES);
+      return data ? JSON.parse(data) : [];
     },
     getByCompany: (companyId: string): ApprovalRule[] => {
-      const rules = db.approvalRules.getAll()
-      return rules.filter((r) => r.companyId === companyId)
+      const rules = db.approvalRules.getAll();
+      return rules.filter((r) => r.companyId === companyId);
     },
     create: (rule: ApprovalRule): void => {
-      const rules = db.approvalRules.getAll()
-      rules.push(rule)
-      localStorage.setItem(STORAGE_KEYS.APPROVAL_RULES, JSON.stringify(rules))
+      const rules = db.approvalRules.getAll();
+      rules.push(rule);
+      localStorage.setItem(STORAGE_KEYS.APPROVAL_RULES, JSON.stringify(rules));
     },
     update: (rule: ApprovalRule): void => {
-      const rules = db.approvalRules.getAll()
-      const index = rules.findIndex((r) => r.id === rule.id)
+      const rules = db.approvalRules.getAll();
+      const index = rules.findIndex((r) => r.id === rule.id);
       if (index !== -1) {
-        rules[index] = rule
-        localStorage.setItem(STORAGE_KEYS.APPROVAL_RULES, JSON.stringify(rules))
+        rules[index] = rule;
+        localStorage.setItem(
+          STORAGE_KEYS.APPROVAL_RULES,
+          JSON.stringify(rules)
+        );
       }
     },
     delete: (id: string): void => {
-      const rules = db.approvalRules.getAll()
-      const filtered = rules.filter((r) => r.id !== id)
-      localStorage.setItem(STORAGE_KEYS.APPROVAL_RULES, JSON.stringify(filtered))
+      const rules = db.approvalRules.getAll();
+      const filtered = rules.filter((r) => r.id !== id);
+      localStorage.setItem(
+        STORAGE_KEYS.APPROVAL_RULES,
+        JSON.stringify(filtered)
+      );
     },
   },
   auth: {
     getCurrentUser: (): User | null => {
-      if (typeof window === "undefined") return null
-      const data = localStorage.getItem(STORAGE_KEYS.CURRENT_USER)
-      return data ? JSON.parse(data) : null
+      if (typeof window === "undefined") return null;
+      const data = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+      return data ? JSON.parse(data) : null;
     },
     setCurrentUser: (user: User | null): void => {
       if (user) {
-        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user))
+        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
       } else {
-        localStorage.removeItem(STORAGE_KEYS.CURRENT_USER)
+        localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
       }
     },
   },
-}
+};
